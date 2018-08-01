@@ -1,5 +1,5 @@
-<?php
 
+<?php
 /*
  *
  *  ____                           _   _  ___
@@ -21,20 +21,13 @@
  *  ( . .) ♥
  *  c(")(")
  */
-
 declare(strict_types=1);
-
 namespace kim\present\inventorymonitor\lang;
-
-use pocketmine\lang\{
-	BaseLang, LanguageNotFoundException
-};
+use pocketmine\lang\Language;
 use pocketmine\plugin\PluginBase;
-
 class PluginLang extends Language{
 	/** @var PluginBase */
 	private $plugin;
-
 	/**
 	 * @noinspection PhpMissingParentConstructorInspection
 	 * PluginLang constructor.
@@ -45,10 +38,8 @@ class PluginLang extends Language{
 	public function __construct(PluginBase $plugin, string $lang){
 		$this->langName = strtolower($lang);
 		$this->plugin = $plugin;
-
 		//Load required language
 		$this->load($lang);
-
 		//Load fallback language
 		$resoruce = $plugin->getResource("lang/" . self::FALLBACK_LANGUAGE . "/lang.ini");
 		if($resoruce !== null){
@@ -57,7 +48,6 @@ class PluginLang extends Language{
 			$plugin->getLogger()->error("Missing fallback language file");
 		}
 	}
-
 	/**
 	 * @param string $lang
 	 *
@@ -65,15 +55,14 @@ class PluginLang extends Language{
 	 */
 	public function load(string $lang) : bool{
 		if($this->isAvailableLanguage($lang)){
-			try{
-				$this->lang = self::loadLang($this->plugin->getDataFolder() . "lang/", "{$this->langName}/lang");
-			}catch(LanguageNotFoundException $e){
-				$this->plugin->getLogger()->error("Missing required language file ({$this->langName})");
+			if(!self::loadLang($file = $this->plugin->getDataFolder() . "lang/" . $this->langName . "/lang.ini", $this->lang)){
+				$this->plugin->getLogger()->error("Missing required language file $file");
+			}else{
+				return true;
 			}
 		}
 		return false;
 	}
-
 	/**
 	 * Read available language list from language.list file
 	 *
@@ -82,7 +71,6 @@ class PluginLang extends Language{
 	public function getAvailableLanguageList() : array{
 		return explode("\n", file_get_contents($this->plugin->getDataFolder() . "lang/language.list"));
 	}
-
 	/**
 	 * @param string $lang
 	 *
