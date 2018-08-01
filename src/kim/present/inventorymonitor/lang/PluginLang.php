@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace kim\present\inventorymonitor\lang;
 
 use pocketmine\lang\{
-	Language, LanguageNotFoundException
+	BaseLang, LanguageNotFoundException
 };
 use pocketmine\plugin\PluginBase;
 
